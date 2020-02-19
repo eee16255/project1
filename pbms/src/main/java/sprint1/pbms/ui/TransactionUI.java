@@ -26,7 +26,7 @@ public class TransactionUI {
 			case 3:
 					System.exit(0);
 					break;
-			case 4:
+			 default:
 				System.out.println("Invalid Choice");
 				break;
 			}

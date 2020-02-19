@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
 import sprint1.pbms.model.Transaction;
 import sprint1.pbms.model.TransactionUsingSlip;
 
@@ -32,7 +31,7 @@ public class TransactionDaoImpl implements TransactionDao{
 		return true;
 		
 	}
-
+    
 	public boolean creditUsingSlip(String userName, String accountNumber,double amount) {
 		//int amount=1000;
 	try {
@@ -43,8 +42,8 @@ public class TransactionDaoImpl implements TransactionDao{
 			throw new Exception("Invalid account number");
 		}
 	
-
-	System.out.println("Deposited"+amount+".rs Successfully total amount");
+			addAmount( accountNumber, amount) ;
+	System.out.println("Deposited"+amount+".rs Successfully total amount"+getBalanceById( accountNumber));
 	}
 	catch(Exception e) {
 		System.out.println(e.getMessage());
@@ -62,8 +61,8 @@ public class TransactionDaoImpl implements TransactionDao{
 			throw new Exception("Invalid account number");
 		}
 	
-
-	System.out.println("withdrawn"+amount+".rs Successfully total amount");
+			deductAmount(accountNumber, amount);
+	System.out.println("withdrawn"+amount+".rs Successfully total amount"+  getBalanceById( accountNumber));
 	}
 	catch(Exception e) {
 		System.out.println(e.getMessage());
@@ -73,21 +72,43 @@ public class TransactionDaoImpl implements TransactionDao{
 	}
 
 	public int getBalanceById(String accountNumber) {
-		if(transaction.containsKey(accountNumber)) {
-			return (int) transaction.get(accountNumber).getBalance();
+		if(!transaction.containsKey(accountNumber)) {
+			System.out.println("No Account Found");
+			return 0;
 		}
-		return 0;
+		TransactionUsingSlip b=transaction.get(accountNumber);
+		return (int) b.getBalance();
 	}
 
 	public boolean updateAccountBalance(TransactionUsingSlip accountDetails, double amount) {
 		if(!transaction.containsKey(accountDetails.getAccountNumber())) {
 		return false;
 	}
-	
+		
+//		TransactionUsngSlip transToUpdate=transaction.get(accountNumber.getBalanceById());
+//		transToUpdate.setBalance(accountNumber.getBalance());
+		
+			
 		return true;
 	}
 	
+	public boolean deductAmount(String accountNumber,double amount) {
+		if(!transaction.containsKey(accountNumber)) {
+			return false;
+		}
+		TransactionUsingSlip acc=transaction.get(accountNumber);
+		acc.setBalance(acc.getBalance()-amount);
+		return true;
+	}
 
+public boolean addAmount(String accountNumber,double amount) {
+	if(!transaction.containsKey(accountNumber)) {
+		return false;
+	}
+	TransactionUsingSlip acc=transaction.get(accountNumber);
+	acc.setBalance(acc.getBalance()+amount);
+	return true;
+}
 }
 class amountLessException extends Exception{
 	amountLessException(String msg){
@@ -98,4 +119,5 @@ class AccountException extends Exception{
 	AccountException(String msg){
 		super(msg);
 	}
+
 }
